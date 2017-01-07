@@ -1,0 +1,16 @@
+name: MiniEdit
+main: com.ninja.MiniEdit.MiniEdit
+version: 1.0.0
+commands:
+   /pos1:
+      description: Set's a MiniEdit pos
+      usage: //pos1
+   /pos2:
+      description: Set's a MiniEdit pos
+      usage: //pos2
+   /set:
+      description: Set's marked position to a block
+      usage: //set <id>
+   /replace:
+      description: Replaces blocks in selection
+      usage: //replace <id> <id>
