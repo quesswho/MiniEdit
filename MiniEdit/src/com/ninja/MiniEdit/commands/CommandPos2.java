@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.ninja.MiniEdit.SelectionManager;
+import com.ninja.MiniEdit.maths.Vec3;
 
 public class CommandPos2 implements CommandExecutor {
 	

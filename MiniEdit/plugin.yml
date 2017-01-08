@@ -1,6 +1,6 @@
 name: MiniEdit
 main: com.ninja.MiniEdit.MiniEdit
-version: 1.0.0
+version: 1.0.2
 commands:
    /pos1:
       description: Set's a MiniEdit pos
@@ -14,3 +14,9 @@ commands:
    /replace:
       description: Replaces blocks in selection
       usage: //replace <id> <id>
+   /undo:
+      description: Undo stuff
+      usage: //undo
+   /redo:
+      description: Redo stuff
+      usage: //redo
