@@ -1,4 +1,4 @@
-package com.ninja.MiniEdit;
+package com.ninja.NinjaEdit;
 
 import java.util.HashMap;
 import java.util.LinkedList;

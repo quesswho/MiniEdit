@@ -1,4 +1,4 @@
-package com.ninja.MiniEdit.maths;
+package com.ninja.NinjaEdit.maths;
 
 public class Vec3 {
 	

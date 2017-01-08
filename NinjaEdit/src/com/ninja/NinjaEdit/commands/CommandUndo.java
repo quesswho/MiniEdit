@@ -1,4 +1,4 @@
-package com.ninja.MiniEdit.commands;
+package com.ninja.NinjaEdit.commands;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -6,14 +6,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.ninja.MiniEdit.MiniEdit;
-import com.ninja.MiniEdit.PlayerSession;
+import com.ninja.NinjaEdit.NinjaEdit;
+import com.ninja.NinjaEdit.PlayerSession;
 
-public class CommandRedo implements CommandExecutor {
+public class CommandUndo implements CommandExecutor {
 
-	MiniEdit inst;
+	NinjaEdit inst;
 	
-	public CommandRedo(MiniEdit inst) {
+	public CommandUndo(NinjaEdit inst) {
 		this.inst = inst;
 	}
 	
@@ -22,13 +22,13 @@ public class CommandRedo implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(sender instanceof Player) {
 			Player p = (Player) sender;
-			if(p.hasPermission("MiniEdit.redo")) {
+			if(p.hasPermission("MiniEdit.undo")) {
 				 PlayerSession session = inst.getSession(p);
-				 if(session.redo(p.getWorld())) {
+				 if(session.undo(p.getWorld())) {
 					 p.sendMessage(ChatColor.LIGHT_PURPLE + "Undo successful.");
 					 return true;
 				 } else {
-					 p.sendMessage(ChatColor.RED + "Nothing to redo.");
+					 p.sendMessage(ChatColor.RED + "Nothing to undo.");
 					 return true;
 				 }
 			}

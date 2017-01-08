@@ -1,11 +1,11 @@
-package com.ninja.MiniEdit;
+package com.ninja.NinjaEdit;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.World;
 
-import com.ninja.MiniEdit.maths.Vec3;
+import com.ninja.NinjaEdit.maths.Vec3;
 
 
 public class EditHistory {
