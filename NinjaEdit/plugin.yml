@@ -20,3 +20,6 @@ commands:
    /redo:
       description: Redo stuff
       usage: //redo
+   /up:
+      description: Go up.
+      usage: //up <value> 

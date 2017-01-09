@@ -10,6 +10,7 @@ import com.ninja.NinjaEdit.commands.CommandRedo;
 import com.ninja.NinjaEdit.commands.CommandReplace;
 import com.ninja.NinjaEdit.commands.CommandSet;
 import com.ninja.NinjaEdit.commands.CommandUndo;
+import com.ninja.NinjaEdit.commands.CommandUp;
 
 public class NinjaEdit extends JavaPlugin {
 	
@@ -18,6 +19,7 @@ public class NinjaEdit extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
+		this.getServer().getPluginManager().registerEvents(new NinjaEditListener(this), this);
 		initCommands();
 	}
 	
@@ -45,5 +47,6 @@ public class NinjaEdit extends JavaPlugin {
 		this.getCommand("/replace").setExecutor(new CommandReplace(this));
 		this.getCommand("/undo").setExecutor(new CommandUndo(this));
 		this.getCommand("/redo").setExecutor(new CommandRedo(this));
+		this.getCommand("/up").setExecutor(new CommandUp(this));
 	}
 }

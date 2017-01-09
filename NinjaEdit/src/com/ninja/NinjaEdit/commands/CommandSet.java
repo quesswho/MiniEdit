@@ -27,7 +27,7 @@ public class CommandSet implements CommandExecutor {
 		if(sender instanceof Player) {
 			Player p = (Player) sender;
 			if(p.hasPermission("MiniEdit.set")) {
-				if(args[0] != null) {
+				if(args.length != 0) {
 					String name = p.getName();
 					PlayerSession session = inst.getSession(name);
 					EditHistory editHistory = new EditHistory();
@@ -46,10 +46,7 @@ public class CommandSet implements CommandExecutor {
 						Location low = new Location(pos1.getWorld(), 0,0,0);
 						Location high = new Location(pos1.getWorld(), 0,0,0);
 						//sorting...
-						low.setX(
-								Math.min(
-										pos1.getBlockX(), 
-										pos2.getBlockX()));
+						low.setX(Math.min(pos1.getBlockX(), pos2.getBlockX()));
 						low.setY(Math.min(pos1.getBlockY(), pos2.getBlockY()));
 						low.setZ(Math.min(pos1.getBlockZ(), pos2.getBlockZ()));
 						

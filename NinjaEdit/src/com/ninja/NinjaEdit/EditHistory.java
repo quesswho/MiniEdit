@@ -20,6 +20,7 @@ public class EditHistory {
 	}
 	
 	//No history change
+	@SuppressWarnings("deprecation")
 	public void setBlock(World world, int x, int y, int z, int id) {
 		world.getBlockAt(x, y, z).setTypeId(id);
 	}
