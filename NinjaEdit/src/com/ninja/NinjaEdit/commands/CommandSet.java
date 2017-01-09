@@ -9,18 +9,15 @@ import org.bukkit.entity.Player;
 import com.ninja.NinjaEdit.EditHistory;
 import com.ninja.NinjaEdit.NinjaEdit;
 import com.ninja.NinjaEdit.PlayerSession;
-import com.ninja.NinjaEdit.SelectionManager;
 
 import net.md_5.bungee.api.ChatColor;
 
 public class CommandSet implements CommandExecutor {
 
-	SelectionManager sm;
 	NinjaEdit inst;
 	
 	
-	public CommandSet(SelectionManager sm, NinjaEdit inst) {
-		this.sm = sm;
+	public CommandSet(NinjaEdit inst) {
 		this.inst = inst;
 	}
 	
@@ -31,19 +28,28 @@ public class CommandSet implements CommandExecutor {
 			Player p = (Player) sender;
 			if(p.hasPermission("MiniEdit.set")) {
 				if(args[0] != null) {
-					PlayerSession session = inst.getSession(p);
+					String name = p.getName();
+					PlayerSession session = inst.getSession(name);
 					EditHistory editHistory = new EditHistory();
 					int id = 0;
+					try {
 					id = Integer.parseInt(args[0]);
-					if(sm.pos1.containsKey(p.getName()) && sm.pos2.containsKey(p.getName())) {
+					} catch(NumberFormatException e) {
+						p.sendMessage(ChatColor.DARK_RED + "You have to put in an id!");
+						return true;
+					}
+					if(inst.getSession(name).pos1 != null && inst.getSession(name).pos1 != null) {
 						
-						Location pos2 = sm.pos2.get(p.getName());
-						Location pos1 = sm.pos1.get(p.getName());
+						Location pos2 = inst.getSession(name).pos2;
+						Location pos1 = inst.getSession(name).pos1;
 						//Note i set low and high to pos1 because of error saying that they need to be initialized
 						Location low = new Location(pos1.getWorld(), 0,0,0);
 						Location high = new Location(pos1.getWorld(), 0,0,0);
 						//sorting...
-						low.setX(Math.min(pos1.getBlockX(), pos2.getBlockX()));
+						low.setX(
+								Math.min(
+										pos1.getBlockX(), 
+										pos2.getBlockX()));
 						low.setY(Math.min(pos1.getBlockY(), pos2.getBlockY()));
 						low.setZ(Math.min(pos1.getBlockZ(), pos2.getBlockZ()));
 						
@@ -63,7 +69,7 @@ public class CommandSet implements CommandExecutor {
 							}
 						}
 						session.remember(editHistory);
-						p.sendMessage(ChatColor.LIGHT_PURPLE + "Successfully changed "  + count + " blocks.");
+						p.sendMessage(ChatColor.LIGHT_PURPLE + "Operation completed ("  + count + " blocks affected).");
 						return true;
 					} else {
 						p.sendMessage(ChatColor.RED + "You need to make a selection first.");

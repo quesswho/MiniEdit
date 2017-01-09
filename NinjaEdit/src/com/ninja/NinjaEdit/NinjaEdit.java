@@ -2,25 +2,22 @@ package com.ninja.NinjaEdit;
 
 import java.util.HashMap;
 
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.ninja.NinjaEdit.commands.CommandPos1;
 import com.ninja.NinjaEdit.commands.CommandPos2;
+import com.ninja.NinjaEdit.commands.CommandRedo;
 import com.ninja.NinjaEdit.commands.CommandReplace;
 import com.ninja.NinjaEdit.commands.CommandSet;
 import com.ninja.NinjaEdit.commands.CommandUndo;
 
 public class NinjaEdit extends JavaPlugin {
 	
-	// selectionmanager instance
-	public SelectionManager selecmanager;
-	public PlayerSession playerSession;
+    //All the players
 	private HashMap<String,PlayerSession> sessions = new HashMap<String,PlayerSession>();
 	
 	@Override
 	public void onEnable() {
-		selecmanager = new SelectionManager();
 		initCommands();
 	}
 	
@@ -31,22 +28,22 @@ public class NinjaEdit extends JavaPlugin {
 		
 	}
 	
-	public PlayerSession getSession(Player player) {
-        if (sessions.containsKey(player.getName())) {
-            return sessions.get(player.getName());
+	public PlayerSession getSession(String player) {
+        if (sessions.containsKey(player)) {
+            return sessions.get(player);
         } else {
             PlayerSession session = new PlayerSession();
-            sessions.put(player.getName(), session);
+            sessions.put(player, session);
             return session;
         }
     }
 	
 	private void initCommands() {
-		this.getCommand("/pos1").setExecutor(new CommandPos1(selecmanager));
-		this.getCommand("/pos2").setExecutor(new CommandPos2(selecmanager));
-		this.getCommand("/set").setExecutor(new CommandSet(selecmanager, this));
-		this.getCommand("/replace").setExecutor(new CommandReplace(selecmanager, this));
+		this.getCommand("/pos1").setExecutor(new CommandPos1(this));
+		this.getCommand("/pos2").setExecutor(new CommandPos2(this));
+		this.getCommand("/set").setExecutor(new CommandSet(this));
+		this.getCommand("/replace").setExecutor(new CommandReplace(this));
 		this.getCommand("/undo").setExecutor(new CommandUndo(this));
-		this.getCommand("/redo").setExecutor(new CommandUndo(this));
+		this.getCommand("/redo").setExecutor(new CommandRedo(this));
 	}
 }

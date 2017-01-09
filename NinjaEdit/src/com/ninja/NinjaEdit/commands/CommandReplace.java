@@ -9,20 +9,18 @@ import org.bukkit.entity.Player;
 import com.ninja.NinjaEdit.EditHistory;
 import com.ninja.NinjaEdit.NinjaEdit;
 import com.ninja.NinjaEdit.PlayerSession;
-import com.ninja.NinjaEdit.SelectionManager;
 
 import net.md_5.bungee.api.ChatColor;
 
 public class CommandReplace implements CommandExecutor {
 
-	SelectionManager sm;
 	NinjaEdit inst;
 	
 	
-	public CommandReplace(SelectionManager sm, NinjaEdit inst) {
-		this.sm = sm;
+	public CommandReplace(NinjaEdit inst) {
 		this.inst = inst;
 	}
+	
 	
 	
 	@Override
@@ -31,26 +29,34 @@ public class CommandReplace implements CommandExecutor {
 			Player p = (Player) sender;
 			if(p.hasPermission("MiniEdit.replace")) {
 				if(args.length >= 1) {
-					PlayerSession session = inst.getSession(p);
+					String name = p.getName();
+					PlayerSession session = inst.getSession(name);
 					EditHistory editHistory = new EditHistory();
-					int id = Integer.parseInt(args[0]);
-					int id2 = Integer.parseInt(args[1]);
-					if(sm.pos1.containsKey(p.getName()) && sm.pos2.containsKey(p.getName())) {
+					int id = 0;
+					int id2 = 0;
+					try {
+					id = Integer.parseInt(args[0]);
+					id2 = Integer.parseInt(args[1]);
+					} catch(NumberFormatException e) {
+						p.sendMessage(ChatColor.DARK_RED + "You have to put in an id!");
+						return true;
+					}
+					if(inst.getSession(name).pos1 != null && inst.getSession(name).pos1 != null) {
 						
-						Location pos2 = sm.pos2.get(p.getName());
-						Location pos1 = sm.pos1.get(p.getName());
+						Location pos2 = inst.getSession(name).pos2;
+						Location pos1 = inst.getSession(name).pos1;
 						
-						Location low = sm.pos1.get(p.getName());
-						Location high = sm.pos1.get(p.getName());
+						Location low = new Location(pos1.getWorld(), 0,0,0);
+						Location high = new Location(pos1.getWorld(), 0,0,0);
 						
 						//sorting...
-						low.setX(Math.min((int)sm.pos1.get(p.getName()).getX(), (int)sm.pos2.get(p.getName()).getBlockX()));
-						low.setY(Math.min((int)sm.pos1.get(p.getName()).getY(), (int)sm.pos2.get(p.getName()).getBlockY()));
-						low.setZ(Math.min((int)sm.pos1.get(p.getName()).getZ(), (int)sm.pos2.get(p.getName()).getBlockZ()));
+						low.setX(Math.min(pos1.getBlockX(), pos2.getBlockX()));
+						low.setY(Math.min(pos1.getBlockY(), pos2.getBlockY()));
+						low.setZ(Math.min(pos1.getBlockZ(), pos2.getBlockZ()));
 						
-						high.setX(Math.max(sm.pos1.get(p.getName()).getX(), sm.pos2.get(p.getName()).getBlockX()));
-						high.setY(Math.max(sm.pos1.get(p.getName()).getY(), sm.pos2.get(p.getName()).getBlockY()));
-						high.setZ(Math.max(sm.pos1.get(p.getName()).getZ(), sm.pos2.get(p.getName()).getBlockZ()));
+						high.setX(Math.max(pos1.getBlockX(), pos2.getBlockX()));
+						high.setY(Math.max(pos1.getBlockY(), pos2.getBlockY()));
+						high.setZ(Math.max(pos1.getBlockZ(), pos2.getBlockZ()));
 						
 						
 						
@@ -68,7 +74,7 @@ public class CommandReplace implements CommandExecutor {
 							}
 						}
 						session.remember(editHistory);
-						p.sendMessage(ChatColor.LIGHT_PURPLE + "Successfully changed "  + count + " blocks.");
+						p.sendMessage(ChatColor.LIGHT_PURPLE + "" + count + " blocks(s) have been replaced.");
 						return true;
 					} else {
 						p.sendMessage(ChatColor.RED + "You need to make a selection first.");

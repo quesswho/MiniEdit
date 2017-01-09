@@ -7,15 +7,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.ninja.NinjaEdit.SelectionManager;
-import com.ninja.NinjaEdit.maths.Vec3;
+import com.ninja.NinjaEdit.NinjaEdit;
 
 public class CommandPos2 implements CommandExecutor {
 	
-	SelectionManager sm;
+	NinjaEdit inst;
 	
-	public CommandPos2(SelectionManager sm) {
-		this.sm = sm;
+	public CommandPos2(NinjaEdit inst) {
+		this.inst = inst;
 	}
 	
 	@Override
@@ -24,8 +23,8 @@ public class CommandPos2 implements CommandExecutor {
 			Player p = (Player) sender;
 			if(p.hasPermission("MiniEdit.Pos2")) {
 				Location pos2 = p.getLocation();
-				sm.setPos2(p.getName(), pos2);
-				p.sendMessage(ChatColor.LIGHT_PURPLE + "Second position set to (" + pos2.getBlockX() + ", " + pos2.getBlockY() + ", " + pos2.getBlockZ() + ") (" + sm.getSelectionSize(p.getName()) + ")");
+				inst.getSession(p.getName()).setPos2(p.getName(), pos2);
+				p.sendMessage(ChatColor.LIGHT_PURPLE + "Second position set to (" + pos2.getBlockX() + ", " + pos2.getBlockY() + ", " + pos2.getBlockZ() + ") (" + inst.getSession(p.getName()).getSelectionSize(p.getName()) + ")");
 				return true;
 			} else {
 				p.sendMessage(ChatColor.DARK_RED + "I'm sorry but you don't have the permission to use this command!");

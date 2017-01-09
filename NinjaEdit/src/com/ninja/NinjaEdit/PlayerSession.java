@@ -1,9 +1,10 @@
 package com.ninja.NinjaEdit;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 
@@ -12,8 +13,8 @@ public class PlayerSession {
 	
 	public static final int MAX_HISTORY_SIZE = 15;
 	
-	public HashMap<String, Location> pos1 = new HashMap<String, Location>();
-	public HashMap<String, Location> pos2 = new HashMap<String, Location>();
+	public Location pos1;
+	public Location pos2;
 	
 	private List<EditHistory> history = new LinkedList<EditHistory>();
     private int historyPointer = 0;
@@ -53,4 +54,42 @@ public class PlayerSession {
 
         return false;
     }
+    
+    public void setPos1(String name, Location loc) {
+		if(Bukkit.getPlayer(name) != null) {
+			pos1 = loc;
+		} else {
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Error: " + "Tried to set pos1 to player: " + name + " But the player wasn't online.");
+		}
+	}
+	
+	
+	public void setPos2(String name, Location loc) {
+		if(Bukkit.getPlayer(name) != null) {
+			pos2 = loc;
+		} else {
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Error: " + "Tried to set pos2 to player: " + name + " But the player wasn't online.");
+		}
+	}
+	
+	public int getSelectionSize(String name) {
+		if(Bukkit.getPlayer(name) != null) {
+			Location temp = Bukkit.getPlayer(name).getLocation();
+			if(pos1 == null || pos2 == null) {
+				//Not all position set
+				return 0;
+			}
+			
+			temp.setX(1+Math.max(pos1.getX(), pos2.getX()) - Math.min(pos1.getX(), pos2.getX()));
+			temp.setY(1+Math.max(pos1.getY(), pos2.getY()) - Math.min(pos1.getY(), pos2.getY()));
+			temp.setZ(1+Math.max(pos1.getZ(), pos2.getZ()) - Math.min(pos1.getZ(), pos2.getZ()));
+			
+			//If this below is used. It is successful
+			return temp.getBlockX() * temp.getBlockY() * temp.getBlockZ();
+			
+		} else {
+			//Error
+			return 0;
+		}
+	}
 }
