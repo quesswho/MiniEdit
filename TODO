@@ -1,4 +1,5 @@
 # This is a TODO list of the plugin called NinjaEdit:
 
-1. Able to use wooden wand instead of //pos1 and //pos2
-2. //copy and //paste
+1. //copy and //paste
+2. //cut
+3. //move

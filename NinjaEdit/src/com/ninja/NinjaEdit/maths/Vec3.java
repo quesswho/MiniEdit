@@ -20,6 +20,10 @@ public class Vec3 {
 	public double getY() { return y; }
 	public double getZ() { return z; }
 	
+	public int getBlockX() { return (int) x; }
+	public int getBlockY() { return (int) y; }
+	public int getBlockZ() { return (int) z; }
+	
 	public boolean equals(Vec3 other) {
         return other.x == x && other.y == y && other.z == z;
     }

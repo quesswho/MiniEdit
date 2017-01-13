@@ -6,15 +6,17 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
+
+import com.ninja.NinjaEdit.maths.Vec3;
 
 public class PlayerSession {
 	
 	
 	public static final int MAX_HISTORY_SIZE = 15;
 	
-	public Location pos1;
-	public Location pos2;
+	public Location pos1, pos2;
 	
 	private List<EditHistory> history = new LinkedList<EditHistory>();
     private int historyPointer = 0;
@@ -91,5 +93,32 @@ public class PlayerSession {
 			//Error
 			return 0;
 		}
+	}
+	
+	public Region getRegion() {
+		if(!(pos1.equals(null) || pos2.equals(null))) {
+			return new CuboidRegion(new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), new Vec3(pos2.getX(), pos2.getY(), pos2.getZ()));
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public DataBlock getBlock(String id, boolean allAllowed) {
+        int foundID;
+        try {
+            foundID = Integer.parseInt(id);
+        } catch (NumberFormatException e) {
+            try {
+                foundID = Material.getMaterial(id).getId();
+            } catch (NumberFormatException e2) {
+            	return null;
+            }
+        }
+        return new DataBlock(foundID);
+        
+    }
+	
+	public DataBlock getBlockType(String id) {
+		return getBlock(id, false);
 	}
 }
