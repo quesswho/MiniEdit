@@ -33,6 +33,7 @@ public class CommandReplace implements CommandExecutor {
 					EditHistory editHistory = new EditHistory();
 					int from = 0;
 					DataBlock to = null;
+					editHistory.enableAsync();
 					try {
 						
 						if(args.length == 1) {
@@ -54,6 +55,7 @@ public class CommandReplace implements CommandExecutor {
 						
 						session.remember(editHistory);
 						p.sendMessage(ChatColor.LIGHT_PURPLE + "" + count + " blocks(s) have been replaced.");
+						editHistory.finshAsyncBlocks(p.getWorld());
 						return true;
 					} else {
 						p.sendMessage(ChatColor.RED + "You need to make a selection first.");

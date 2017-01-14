@@ -5,27 +5,27 @@ public class DataBlock {
 	
 	private short id = 0;
 	
-	private char nbtvalue = 0;
+	private char datavalue = 0;
 	
 	
 	public DataBlock(int id) {
 		this.id = (short) id;
 	}
 	
-	public DataBlock(int id, int nbtvalue) {
+	public DataBlock(int id, int datavalue) {
 		this.id = (short) id;
-		this.nbtvalue = (char) nbtvalue;
+		this.datavalue = (char) datavalue;
 	}
 	
 	public int getTypeId() { return id; }
-	public int getNBTValue() { return nbtvalue; }
+	public int getDataValue() { return datavalue; }
 	
 	public void setType(int id) {
         this.id = (short)id;
     }
 	
-	public void setNBTValue(int nbtvalue) {
-        this.nbtvalue = (char)nbtvalue;
+	public void setDataValue(int datavalue) {
+        this.datavalue = (char)datavalue;
     }
 	
 	

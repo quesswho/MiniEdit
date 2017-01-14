@@ -56,12 +56,14 @@ NinjaEdit inst;
 				}
 				PlayerSession session = inst.getSession(p.getName());
 				EditHistory editHistory = new EditHistory();
+				editHistory.enableAsync();
 				
 				int count = Integer.parseInt(args[0]);
 				
 				int affected = editHistory.stackClipboard(p.getWorld(), session.getRegion(),dir, count);
 				p.sendMessage(ChatColor.LIGHT_PURPLE + "" + affected + " block(s) changed. Undo with //undo");
 				session.remember(editHistory);
+				editHistory.finshAsyncBlocks(p.getWorld());
 				return true;
 			}
 		}

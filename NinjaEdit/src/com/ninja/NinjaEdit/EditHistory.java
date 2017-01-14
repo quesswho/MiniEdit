@@ -22,10 +22,18 @@ public class EditHistory {
 	private boolean aSync = false;
 	
 	//List of blocks which will be done last
-	private static HashSet<DataBlock> aSyncBlockslist = new HashSet<DataBlock>();
+	private static final HashSet<Integer> aSyncBlockslist = new HashSet<Integer>();
 	static { 
+		aSyncBlockslist.add(50); //torch
+		aSyncBlockslist.add(75); //redstonetorch off
+		aSyncBlockslist.add(76); //redstonetorch on
+		aSyncBlockslist.add(93); //repeater off
+		aSyncBlockslist.add(94); //repeater on
+		aSyncBlockslist.add(55); //redstone wire
+		aSyncBlockslist.add(149); //comparator off
+		aSyncBlockslist.add(150); //comparator on
 		
-		aSyncBlockslist.add(new DataBlock(50)); //torch
+		/*aSyncBlockslist.add(new DataBlock(50)); //torch
 		aSyncBlockslist.add(new DataBlock(75)); //redstonetorch off
 		aSyncBlockslist.add(new DataBlock(76)); //redstonetorch on
 		aSyncBlockslist.add(new DataBlock(93)); //repeater off
@@ -33,7 +41,7 @@ public class EditHistory {
 		aSyncBlockslist.add(new DataBlock(55)); //redstone wire
 		aSyncBlockslist.add(new DataBlock(149)); //comparator off
 		aSyncBlockslist.add(new DataBlock(150)); //comparator on
-		aSyncBlockslist.add(new DataBlock(31, 0)); //dead shrub
+		aSyncBlockslist.add(new DataBlock(31)); //dead shrub
 		aSyncBlockslist.add(new DataBlock(31, 1)); //tallgrass
 		aSyncBlockslist.add(new DataBlock(31, 2)); //fern
 		aSyncBlockslist.add(new DataBlock(175, 0)); //sunflower
@@ -52,7 +60,7 @@ public class EditHistory {
 		aSyncBlockslist.add(new DataBlock(38, 6)); //White tulip
 		aSyncBlockslist.add(new DataBlock(38, 7)); //pink tulip
 		aSyncBlockslist.add(new DataBlock(38, 8)); //oxeye daisy
-		aSyncBlockslist.add(new DataBlock(6, 0)); //oak sapling
+		aSyncBlockslist.add(new DataBlock(6)); //oak sapling
 		aSyncBlockslist.add(new DataBlock(6, 1)); //spruce sapling
 		aSyncBlockslist.add(new DataBlock(6, 2)); //birch sapling
 		aSyncBlockslist.add(new DataBlock(6, 3)); //jungle sapling
@@ -67,7 +75,7 @@ public class EditHistory {
 		aSyncBlockslist.add(new DataBlock(65)); //ladder
 		aSyncBlockslist.add(new DataBlock(78)); //snow
 		aSyncBlockslist.add(new DataBlock(321)); //painting
-		aSyncBlockslist.add(new DataBlock(83)); //sugar cane
+		aSyncBlockslist.add(new DataBlock(83)); //sugar cane*/
 	}
 	@SuppressWarnings("deprecation")
 	public DataBlock getBlock(World world, Vec3 vec) {
@@ -76,9 +84,8 @@ public class EditHistory {
 		return new DataBlock(type, data);
 	}
 	
-	public DataBlock hGetBlock(World world, Vec3 vec) {
-        // In the case of the queue, the block may have not actually been
-        // changed yet
+	public DataBlock aSyncGetBlock(World world, Vec3 vec) {
+
         if (aSync) {
 
             if (after.containsKey(vec)) {
@@ -92,7 +99,7 @@ public class EditHistory {
 	//No history change
 	@SuppressWarnings("deprecation")
 	public void setBlock(World world, Vec3 vec, DataBlock block) {
-		world.getBlockAt((int)vec.getBlockX(), (int)vec.getBlockY(), (int)vec.getBlockZ()).setTypeIdAndData(block.getTypeId(), (byte) block.getNBTValue(), false);
+		world.getBlockAt((int)vec.getBlockX(), (int)vec.getBlockY(), (int)vec.getBlockZ()).setTypeIdAndData(block.getTypeId(), (byte) block.getDataValue(), false);
 	}
 	
 	//History change
@@ -106,11 +113,13 @@ public class EditHistory {
     }
 	private void aSyncSetBlock(World world, Vec3 vec, DataBlock block) {
 		if(aSync) {
-			if (!block.isAir() && aSyncBlockslist.contains(block) && getBlock(world, vec.tempAdd(0, -1, 0)).isAir()) {
+			//check if block is in list
+			if (!block.isAir() && aSyncBlockslist.contains(block.getTypeId()) && getBlock(world, vec.tempAdd(0, -1, 0)).isAir()) {
 				aSyncBlocks.put(vec, block);
-                if(hGetBlock(world, vec) != block) return;
+                if(aSyncGetBlock(world, vec) != block) return;
             } else if (block.isAir() && aSyncBlockslist.contains(getBlock(world, vec.tempAdd(0, 1, 0)))) {
                 setBlock(world, vec.tempAdd(0, 1, 0), new DataBlock(0)); // Prevent items from being dropped
+                return;
             }
 		}
 		setBlock(world, vec, block);
@@ -215,7 +224,7 @@ public class EditHistory {
 	public void undo(World world) {
 		for(Map.Entry<Vec3, DataBlock> beforedata : before.entrySet()) {
 			Vec3 vec = beforedata.getKey();
-			setBlock(world, vec, beforedata.getValue());
+			aSyncSetBlock(world, vec, beforedata.getValue());
 		}
 		finshAsyncBlocks(world);
 	}
@@ -225,10 +234,14 @@ public class EditHistory {
 	public void redo(World world) {
         for (Map.Entry<Vec3,DataBlock> afterdata : after.entrySet()) {
             Vec3 vec = afterdata.getKey();
-            setBlock(world, vec, afterdata.getValue());
+            aSyncSetBlock(world, vec, afterdata.getValue());
         }
         finshAsyncBlocks(world);
     }
+	
+	public void enableAsync() {
+		aSync = true;
+	}
 	
 	public void disableAsync(World world) {
         if (aSync != false) {

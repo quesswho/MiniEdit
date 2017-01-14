@@ -56,7 +56,7 @@ public class CuboidClipboard {
     	for (int x = 0; x < size.getBlockX(); x++) {
             for (int y = 0; y < size.getBlockY(); y++) {
                 for (int z = 0; z < size.getBlockZ(); z++) {
-                    data[x][y][z] = editHistory.hGetBlock(world, new Vec3(x, y, z).tempAdd(origin));
+                    data[x][y][z] = editHistory.aSyncGetBlock(world, new Vec3(x, y, z).tempAdd(origin));
                 }
             }
         }
@@ -71,7 +71,8 @@ public class CuboidClipboard {
     	 for (int x = 0; x < size.getBlockX(); x++) {
              for (int y = 0; y < size.getBlockY(); y++) {
                  for (int z = 0; z < size.getBlockZ(); z++) {
-                     
+                	 if (data[x][y][z].isAir())
+                         continue;
                      editHistory.hSetBlock(world, new Vec3(x, y, z).tempAdd(pos), data[x][y][z]);
                  }
              }

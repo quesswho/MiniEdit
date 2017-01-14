@@ -26,11 +26,13 @@ public class CommandPaste implements CommandExecutor {
 			if(p.hasPermission("MiniEdit.paste")) {
 				PlayerSession session = inst.getSession(p.getName());
 				EditHistory editHistory = new EditHistory();
+				editHistory.enableAsync();
 				Vec3 pos = new Vec3((int)Math.floor(p.getLocation().getX()),
                         (int)Math.floor(p.getLocation().getY()),
                         (int)Math.floor(p.getLocation().getZ()));
 				session.getClipboard().paste(p.getWorld(), editHistory, pos);
 				session.remember(editHistory);
+				editHistory.finshAsyncBlocks(p.getWorld());
 				p.sendMessage(ChatColor.LIGHT_PURPLE + "The clipboard has been pasted at (" + p.getLocation().getBlockX() + ", " + p.getLocation().getBlockY() + ", " + p.getLocation().getBlockZ() + ")");
 				return true;
 			} else {

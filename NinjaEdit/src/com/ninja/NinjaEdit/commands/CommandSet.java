@@ -33,6 +33,7 @@ public class CommandSet implements CommandExecutor {
 					PlayerSession session = inst.getSession(name);
 					EditHistory editHistory = new EditHistory();
 					DataBlock blocktype;
+					editHistory.enableAsync();
 					try {
 						blocktype = inst.getBlock(args[0]);
 					} catch(UnknownItemException e) {
@@ -46,6 +47,7 @@ public class CommandSet implements CommandExecutor {
 						
 						session.remember(editHistory);
 						p.sendMessage(ChatColor.LIGHT_PURPLE + "Operation completed ("  + count + " blocks affected).");
+						editHistory.finshAsyncBlocks(p.getWorld());
 						return true;
 					} else {
 						p.sendMessage(ChatColor.RED + "You need to make a selection first.");
