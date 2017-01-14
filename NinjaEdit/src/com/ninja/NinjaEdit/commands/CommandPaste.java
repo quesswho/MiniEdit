@@ -31,7 +31,7 @@ public class CommandPaste implements CommandExecutor {
                         (int)Math.floor(p.getLocation().getZ()));
 				session.getClipboard().paste(p.getWorld(), editHistory, pos);
 				session.remember(editHistory);
-				p.sendMessage(ChatColor.LIGHT_PURPLE + "Pasted.");
+				p.sendMessage(ChatColor.LIGHT_PURPLE + "The clipboard has been pasted at (" + p.getLocation().getBlockX() + ", " + p.getLocation().getBlockY() + ", " + p.getLocation().getBlockZ() + ")");
 				return true;
 			} else {
 				p.sendMessage(ChatColor.RED + "You do not have permission to perform this command");

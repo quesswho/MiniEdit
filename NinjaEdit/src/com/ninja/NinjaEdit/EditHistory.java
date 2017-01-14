@@ -180,6 +180,34 @@ public class EditHistory {
 	 	 return affected;
 	 }
 	 
+	 public int stackClipboard(World world, Region region, Vec3 dir, int count) {
+	        int affected = 0;
+
+	        Vec3 min = region.getMinimumPoint();
+	        Vec3 max = region.getMaximumPoint();
+	        int xs = region.getWidth();
+	        int ys = region.getHeight();
+	        int zs = region.getLength();
+
+	        for (int x = min.getBlockX(); x <= max.getBlockX(); x++) {
+	            for (int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
+	                for (int y = min.getBlockY(); y <= max.getBlockY(); y++) {
+	                    DataBlock block = getBlock(world, new Vec3(x, y, z));
+
+	                    if (!block.isAir()) {
+	                        for (int i = 1; i <= count; i++) {
+	                            Vec3 pos = new Vec3(x + xs * dir.getBlockX() * i, y + ys * dir.getBlockY() * i, z + zs * dir.getBlockZ() * i);
+	                            hSetBlock(world, pos, block);
+	                               affected++;
+	                            
+	                        }
+	                    }
+	                }
+	            }
+	        }
+
+	        return affected;
+	    }
 	 
 	 
 	 

@@ -1,6 +1,6 @@
 name: NinjaEdit
 main: com.ninja.NinjaEdit.NinjaEdit
-version: 1.0.2
+version: 1.0.3
 commands:
    /pos1:
       description: Set's a NinjaEdit pos
@@ -29,3 +29,9 @@ commands:
    /paste:
       description: paste your clipboard.
       usage: //paste
+   /cut:
+      description: cut the selection to your clipboard.
+      usage: //cut
+   /stack:
+      description: stack your selection in a direction.
+      usage: //stack <dir>
