@@ -34,4 +34,7 @@ commands:
       usage: //cut
    /stack:
       description: stack your selection in a direction.
-      usage: //stack <dir>
+      usage: //stack <dir> <amount>
+   /wand:
+      description: Gives you a magical wand.
+      usage: //wand

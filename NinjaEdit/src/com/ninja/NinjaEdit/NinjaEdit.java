@@ -17,6 +17,7 @@ import com.ninja.NinjaEdit.commands.CommandSet;
 import com.ninja.NinjaEdit.commands.CommandStack;
 import com.ninja.NinjaEdit.commands.CommandUndo;
 import com.ninja.NinjaEdit.commands.CommandUp;
+import com.ninja.NinjaEdit.commands.CommandWand;
 
 public class NinjaEdit extends JavaPlugin {
 
@@ -93,5 +94,6 @@ public class NinjaEdit extends JavaPlugin {
 		this.getCommand("/paste").setExecutor(new CommandPaste(this));
 		this.getCommand("/cut").setExecutor(new CommandCut(this));
 		this.getCommand("/stack").setExecutor(new CommandStack(this));
+		this.getCommand("/wand").setExecutor(new CommandWand());
 	}
 }

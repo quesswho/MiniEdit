@@ -15,7 +15,13 @@ public class CommandWand implements CommandExecutor {
 		if(sender instanceof Player) {
 			Player p = (Player) sender;
 			if(p.hasPermission("MiniEdit.up")) {
-				p.getInventory().addItem(new ItemStack(Material.WOOD_AXE, 1));
+				 if(p.getInventory().firstEmpty() != -1) {
+					 p.getInventory().addItem(new ItemStack(Material.WOOD_AXE, 1));
+					 p.sendMessage(ChatColor.LIGHT_PURPLE + "Wand given.");
+				 } else {
+					 p.sendMessage(ChatColor.LIGHT_PURPLE + "Inventory full.");
+				 }
+				 return true;
 			} else {
 				p.sendMessage(ChatColor.RED + "You do not have the permission to this command.");
 			}
