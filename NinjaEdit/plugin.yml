@@ -23,3 +23,9 @@ commands:
    /up:
       description: Go up.
       usage: //up <value> 
+   /copy:
+      description: copy your selection to your clipboard.
+      usage: //copy
+   /paste:
+      description: paste your clipboard.
+      usage: //paste

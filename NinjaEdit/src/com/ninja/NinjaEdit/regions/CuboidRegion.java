@@ -1,4 +1,4 @@
-package com.ninja.NinjaEdit;
+package com.ninja.NinjaEdit.regions;
 
 import java.util.Iterator;
 
@@ -17,39 +17,39 @@ public class CuboidRegion implements Region {
 
     @Override
     public Vec3 getMinimumPoint() {
-        return new Vec3(Math.min(pos1.getX(), pos2.getX()),
-                         Math.min(pos1.getY(), pos2.getY()),
-                         Math.min(pos1.getZ(), pos2.getZ()));
+        return new Vec3(Math.min(pos1.getBlockX(), pos2.getBlockX()),
+                         Math.min(pos1.getBlockY(), pos2.getBlockY()),
+                         Math.min(pos1.getBlockZ(), pos2.getBlockZ()));
     }
 
     @Override
     public Vec3 getMaximumPoint() {
-        return new Vec3(Math.max(pos1.getX(), pos2.getX()),
-                         Math.max(pos1.getY(), pos2.getY()),
-                         Math.max(pos1.getZ(), pos2.getZ()));
+        return new Vec3(Math.max(pos1.getBlockX(), pos2.getBlockX()),
+                         Math.max(pos1.getBlockY(), pos2.getBlockY()),
+                         Math.max(pos1.getBlockZ(), pos2.getBlockZ()));
     }
 
     public int getSize() {
     	Vec3 min = getMinimumPoint();
         Vec3 max = getMaximumPoint();
 
-        return (int)((max.getX() - min.getX() + 1) *
-                     (max.getY() - min.getY() + 1) *
-                     (max.getZ() - min.getZ() + 1));
+        return (int)((max.getBlockX() - min.getBlockX() + 1) *
+                     (max.getBlockY() - min.getBlockY() + 1) *
+                     (max.getBlockZ() - min.getBlockZ() + 1));
     }
 
     public int getWidth() {
     	Vec3 min = getMinimumPoint();
         Vec3 max = getMaximumPoint();
 
-        return (int)(max.getX() - min.getX() + 1);
+        return (int)(max.getBlockX() - min.getBlockX() + 1);
     }
 
     public int getHeight() {
     	Vec3 min = getMinimumPoint();
     	Vec3 max = getMaximumPoint();
 
-        return (int)(max.getY() - min.getY() + 1);
+        return (int)(max.getBlockY() - min.getBlockY() + 1);
     }
 
 
@@ -57,7 +57,7 @@ public class CuboidRegion implements Region {
     	Vec3 min = getMinimumPoint();
         Vec3 max = getMaximumPoint();
 
-        return (int)(max.getZ() - min.getZ() + 1);
+        return (int)(max.getBlockZ() - min.getBlockZ() + 1);
     }
 
 

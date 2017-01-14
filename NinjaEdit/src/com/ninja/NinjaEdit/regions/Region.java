@@ -1,4 +1,4 @@
-package com.ninja.NinjaEdit;
+package com.ninja.NinjaEdit.regions;
 
 import com.ninja.NinjaEdit.maths.Vec3;
 

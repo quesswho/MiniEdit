@@ -8,8 +8,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 import com.ninja.NinjaEdit.maths.Vec3;
+import com.ninja.NinjaEdit.regions.CuboidClipboard;
+import com.ninja.NinjaEdit.regions.CuboidRegion;
+import com.ninja.NinjaEdit.regions.Region;
 
 public class PlayerSession {
 	
@@ -20,6 +24,8 @@ public class PlayerSession {
 	
 	private List<EditHistory> history = new LinkedList<EditHistory>();
     private int historyPointer = 0;
+    private CuboidClipboard clipboard;
+    
     
     public void remember(EditHistory editHistory) {
         // Don't store anything if no changes were made
@@ -97,10 +103,18 @@ public class PlayerSession {
 	
 	public Region getRegion() {
 		if(!(pos1.equals(null) || pos2.equals(null))) {
-			return new CuboidRegion(new Vec3(pos1.getX(), pos1.getY(), pos1.getZ()), new Vec3(pos2.getX(), pos2.getY(), pos2.getZ()));
+			return new CuboidRegion(new Vec3(pos1.getBlockX(), pos1.getBlockY(), pos1.getBlockZ()), new Vec3(pos2.getBlockX(), pos2.getBlockY(), pos2.getBlockZ()));
 		}
 		return null;
 	}
+	
+	public CuboidClipboard getClipboard() {
+        return clipboard;
+    }
+	
+	public void setClipboard(CuboidClipboard clipboard) {
+        this.clipboard = clipboard;
+    }
 	
 	@SuppressWarnings("deprecation")
 	public DataBlock getBlock(String id, boolean allAllowed) {
@@ -121,4 +135,13 @@ public class PlayerSession {
 	public DataBlock getBlockType(String id) {
 		return getBlock(id, false);
 	}
+	
+	public Vec3 getPlacementPosition(Player p) {
+        if (pos1.equals(null)) {
+            return new Vec3(p.getLocation().getBlockX(), p.getLocation().getBlockY(), p.getLocation().getBlockZ());
+        }
+
+
+        return new Vec3(pos1.getBlockX(), pos1.getBlockY(), pos1.getBlockZ());
+    }
 }
