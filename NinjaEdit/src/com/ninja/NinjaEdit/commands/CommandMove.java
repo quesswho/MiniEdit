@@ -11,11 +11,12 @@ import com.ninja.NinjaEdit.NinjaEdit;
 import com.ninja.NinjaEdit.PlayerSession;
 import com.ninja.NinjaEdit.maths.Vec3;
 
-public class CommandStack implements CommandExecutor {
+public class CommandMove implements CommandExecutor {
 
-	NinjaEdit inst;
 	
-	public CommandStack(NinjaEdit inst) {
+NinjaEdit inst;
+	
+	public CommandMove(NinjaEdit inst) {
 		this.inst = inst;
 	}
 	
@@ -27,22 +28,18 @@ public class CommandStack implements CommandExecutor {
 				Vec3 dir = new Vec3();
 				// no dir set. will use where ever the player is looking
 				if(args.length == 1) {
-					
 					 
 					double pitch = p.getLocation().getPitch();
 					double yaw = p.getLocation().getYaw();
 					if(yaw < 0) yaw += 360;
 					 
-					 
-					 
 					if(pitch > 60) dir.add(0, -1, 0); // down
 					else if(pitch < -60) dir.add(0, 1, 0); // up
 					
-					else if(yaw < 45 && yaw > 315) dir.add(0, 0, 1); //south
+					else if(yaw < 45 || yaw > 315) dir.add(0, 0, 1); //south
 					else if(yaw > 45 && yaw < 135) dir.add(-1, 0, 0); //West
-					else if((yaw > 135) || (yaw < 225)) dir.add(0, 0, -1); //north
+					else if((yaw > 135 && yaw < 225)) dir.add(0, 0, -1); //north
 					else if((yaw > 225 && yaw < 315)) dir.add(1, 0, 0); //East
-					 
 				} else if(args.length == 2) {
 					String dirstr = args[1];
 					if(dirstr.equalsIgnoreCase("u") || dirstr.equalsIgnoreCase("up")) dir.add(0, 1, 0);
@@ -63,9 +60,8 @@ public class CommandStack implements CommandExecutor {
 				editHistory.enableAsync();
 				
 				int count = Integer.parseInt(args[0]);
-				
-				int affected = editHistory.stackClipboard(p.getWorld(), session.getRegion(),dir, count);
-				p.sendMessage(ChatColor.LIGHT_PURPLE + "" + affected + " block(s) changed. Undo with //undo");
+				int affected = editHistory.moveClipboard(p.getWorld(), session.getRegion(), dir, count);
+				p.sendMessage(ChatColor.LIGHT_PURPLE + "" + affected + " block(s) moved.");
 				session.remember(editHistory);
 				editHistory.finshAsyncBlocks(p.getWorld());
 				return true;
@@ -73,5 +69,4 @@ public class CommandStack implements CommandExecutor {
 		}
 		return false;
 	}
-
 }

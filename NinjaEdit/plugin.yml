@@ -38,3 +38,6 @@ commands:
    /wand:
       description: Gives you a magical wand.
       usage: //wand
+   /move:
+      description: move your clipboard in a direction.
+      usage: //move <dir> <amount>

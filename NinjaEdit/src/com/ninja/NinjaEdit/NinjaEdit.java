@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.ninja.NinjaEdit.Exceptions.UnknownItemException;
 import com.ninja.NinjaEdit.commands.CommandCopy;
 import com.ninja.NinjaEdit.commands.CommandCut;
+import com.ninja.NinjaEdit.commands.CommandMove;
 import com.ninja.NinjaEdit.commands.CommandPaste;
 import com.ninja.NinjaEdit.commands.CommandPos1;
 import com.ninja.NinjaEdit.commands.CommandPos2;
@@ -95,5 +96,6 @@ public class NinjaEdit extends JavaPlugin {
 		this.getCommand("/cut").setExecutor(new CommandCut(this));
 		this.getCommand("/stack").setExecutor(new CommandStack(this));
 		this.getCommand("/wand").setExecutor(new CommandWand());
+		this.getCommand("/move").setExecutor(new CommandMove(this));
 	}
 }

@@ -57,6 +57,25 @@ public class Vec3 {
 		this.z -= other.z;
 	}
 	
+	public void multiply(int other) {
+		this.x *= other;
+		this.y *= other;
+		this.z *= other;
+	}
+	
+	public void multiply(Vec3 other) {
+		this.x *= other.x;
+		this.y *= other.y;
+		this.z *= other.z;
+	}
+	
+	public void multiply(int otherx, int othery, int otherz) {
+		this.x *= otherx;
+		this.y *= othery;
+		this.z *= otherz;
+	}
+	
+	
 	public Vec3 tempAdd(int x, int y, int z) {
         return new Vec3(this.x + x, this.y + y, this.z + z);
     }
@@ -71,6 +90,17 @@ public class Vec3 {
 	
 	public Vec3 tempSubtract(Vec3 other) {
         return new Vec3(x - other.x, y - other.y, z - other.z);
+    }
+	
+	public Vec3 tempMultiply(int other) {
+		return new Vec3(x * other, y * other, z * other);
+	}
+	
+	public Vec3 tempMultiply(Vec3 other) {
+		return new Vec3(x * other.x, y * other.y, z * other.z);
+	}
+	public Vec3 tempMultiply(int x, int y, int z) {
+        return new Vec3(this.x * x, this.y * y, this.z * z);
     }
 
 }

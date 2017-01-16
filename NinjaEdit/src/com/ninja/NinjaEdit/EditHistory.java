@@ -2,6 +2,7 @@ package com.ninja.NinjaEdit;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.bukkit.World;
@@ -178,8 +179,8 @@ public class EditHistory {
 	                        Vec3 vec = new Vec3(x, y, z);
 	                        int curBlockType = getBlock(world, vec).getTypeId();
 	                        if (fromBlockType == -1 && curBlockType != 0 || curBlockType == fromBlockType) {
-	                            	hSetBlock(world, vec, toBlock);
-	                                affected++;
+	                            hSetBlock(world, vec, toBlock);
+	                            affected++;
 	                        }
 	                    }
 	                }
@@ -194,20 +195,27 @@ public class EditHistory {
 
 	        Vec3 min = region.getMinimumPoint();
 	        Vec3 max = region.getMaximumPoint();
+	        
+	        int minX = min.getBlockX();
+	        int minY = min.getBlockY();
+	        int minZ = min.getBlockZ();
+	        int maxX = max.getBlockX();
+	        int maxY = max.getBlockY();
+	        int maxZ = max.getBlockZ();
+	        
 	        int xs = region.getWidth();
 	        int ys = region.getHeight();
 	        int zs = region.getLength();
-
-	        for (int x = min.getBlockX(); x <= max.getBlockX(); x++) {
-	            for (int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
-	                for (int y = min.getBlockY(); y <= max.getBlockY(); y++) {
+	        for (int x = minX; x <= maxX; x++) {
+	            for (int z = minZ; z <= maxZ; z++) {
+	                for (int y = minY; y <= maxY; y++) {
 	                    DataBlock block = getBlock(world, new Vec3(x, y, z));
 
 	                    if (!block.isAir()) {
 	                        for (int i = 1; i <= count; i++) {
-	                            Vec3 pos = new Vec3(x + xs * dir.getBlockX() * i, y + ys * dir.getBlockY() * i, z + zs * dir.getBlockZ() * i);
+	                            Vec3 pos = new Vec3( x + xs * dir.getBlockX() * i, y + ys * dir.getBlockY() * i, z + zs * dir.getBlockZ() * i);
 	                            hSetBlock(world, pos, block);
-	                               affected++;
+	                            affected++;
 	                            
 	                        }
 	                    }
@@ -217,6 +225,46 @@ public class EditHistory {
 
 	        return affected;
 	    }
+	 
+	 public int moveClipboard(World world, Region region, Vec3 dir, int amount) {
+		 int affected = 0;
+
+		 DataBlock setblock = new DataBlock(0);
+		 
+		 Vec3 min = region.getMinimumPoint();
+		 Vec3 max = region.getMaximumPoint();
+		 Vec3 distance = dir.tempMultiply(amount);
+		 Vec3 newMin = min.tempAdd(distance);
+		 Vec3 newMax = max.tempAdd(distance);
+	     int minX = min.getBlockX();
+	     int minY = min.getBlockY();
+	     int minZ = min.getBlockZ();
+	     int maxX = max.getBlockX();
+	     int maxY = max.getBlockY();
+	     int maxZ = max.getBlockZ();
+	     
+	     Map<Vec3,DataBlock> delayed = new HashMap<Vec3,DataBlock>();
+	     
+	     for (int x = minX; x <= maxX; x++) {
+	         for (int z = minZ; z <= maxZ; z++) {
+                 for (int y = minY; y <= maxY; y++) {
+                	 Vec3 pos = new Vec3(x, y, z);
+                	 Vec3 newPos = pos.tempAdd(distance);
+                	 delayed.put(newPos, getBlock(world, pos));
+                	 if (!(x >= newMin.getBlockX() && x <= newMax.getBlockX() && y >= newMin.getBlockY() && y <= newMax.getBlockY() && z >= newMin.getBlockZ() && z <= newMax.getBlockZ())) {
+                		 hSetBlock(world, pos, setblock);
+                	 }
+                 }
+             }
+         }
+	     for(Map.Entry<Vec3, DataBlock> movedBlock : delayed.entrySet()) {
+	    	 hSetBlock(world, movedBlock.getKey(), movedBlock.getValue());
+	    	 affected++;
+	     }
+	     
+	     
+		 return affected;
+	 }
 	 
 	 
 	 
@@ -254,8 +302,8 @@ public class EditHistory {
         if (!aSync) { return; }
         
         for (Map.Entry<Vec3,DataBlock> entry : aSyncBlocks.entrySet()) {
-            Vec3 vec = (Vec3)entry.getKey();
-            setBlock(world, vec, (DataBlock)entry.getValue());
+            Vec3 vec = entry.getKey();
+            setBlock(world, vec, entry.getValue());
         }
     }
 	
