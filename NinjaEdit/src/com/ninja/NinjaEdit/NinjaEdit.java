@@ -6,8 +6,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.ninja.NinjaEdit.Exceptions.UnknownItemException;
+import com.ninja.NinjaEdit.commands.CommandContract;
 import com.ninja.NinjaEdit.commands.CommandCopy;
 import com.ninja.NinjaEdit.commands.CommandCut;
+import com.ninja.NinjaEdit.commands.CommandExpand;
+import com.ninja.NinjaEdit.commands.CommandGetId;
 import com.ninja.NinjaEdit.commands.CommandMove;
 import com.ninja.NinjaEdit.commands.CommandPaste;
 import com.ninja.NinjaEdit.commands.CommandPos1;
@@ -60,9 +63,18 @@ public class NinjaEdit extends JavaPlugin {
 			typeid = Integer.parseInt(id);
 			blocktype = new DataBlock(typeid, data);
 		} catch (NumberFormatException e) {
-			blocktype = new DataBlock(Bukkit.getUnsafe().getMaterialFromInternalName(testID).getId(), data);
+			try {
+				blocktype = new DataBlock(Bukkit.getUnsafe().getMaterialFromInternalName(testID).getId(), data);
+				Bukkit.getPlayer("ninja2003").sendMessage(testID + "_block");
+			} catch(NumberFormatException e2) {
+				try {
+					blocktype = new DataBlock(Bukkit.getUnsafe().getMaterialFromInternalName(testID + "_block").getId(), data);
+				} catch(NumberFormatException e3) {
+					throw new UnknownItemException();	
+				}
+				
+			}
 			if(blocktype.equals(null)) {
-				throw new UnknownItemException();
 			}
 		}
 		return blocktype;
@@ -97,5 +109,8 @@ public class NinjaEdit extends JavaPlugin {
 		this.getCommand("/stack").setExecutor(new CommandStack(this));
 		this.getCommand("/wand").setExecutor(new CommandWand());
 		this.getCommand("/move").setExecutor(new CommandMove(this));
+		this.getCommand("/getid").setExecutor(new CommandGetId(this));
+		this.getCommand("/expand").setExecutor(new CommandExpand(this));
+		this.getCommand("/contract").setExecutor(new CommandContract(this));
 	}
 }

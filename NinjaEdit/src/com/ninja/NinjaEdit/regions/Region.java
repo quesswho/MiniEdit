@@ -18,4 +18,9 @@ public interface Region extends Iterable<Vec3> {
 
     public int getLength();
     
+    
+    public void expand(Vec3 change);
+    
+    public void contract(Vec3 change);
+    
 }

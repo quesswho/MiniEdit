@@ -22,7 +22,7 @@ public class CommandUp implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(sender instanceof Player) {
 			Player p = (Player) sender;
-			if(p.hasPermission("MiniEdit.up")) {
+			if(p.hasPermission("NinjaEdit.up")) {
 				Location loc = p.getLocation();
 				int value = -1;
 				if(args.length != 0) {

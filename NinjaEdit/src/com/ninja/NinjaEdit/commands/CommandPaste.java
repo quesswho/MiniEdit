@@ -23,7 +23,7 @@ public class CommandPaste implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(sender instanceof Player) {
 			Player p = (Player) sender;
-			if(p.hasPermission("MiniEdit.paste")) {
+			if(p.hasPermission("NinjaEdit.paste")) {
 				PlayerSession session = inst.getSession(p.getName());
 				EditHistory editHistory = new EditHistory();
 				editHistory.enableAsync();

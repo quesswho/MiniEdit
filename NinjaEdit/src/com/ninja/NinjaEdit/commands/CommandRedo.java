@@ -22,7 +22,7 @@ public class CommandRedo implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(sender instanceof Player) {
 			Player p = (Player) sender;
-			if(p.hasPermission("MiniEdit.redo")) {
+			if(p.hasPermission("NinjaEdit.redo")) {
 				 PlayerSession session = inst.getSession(p.getName());
 				 if(session.redo(p.getWorld())) {
 					 p.sendMessage(ChatColor.LIGHT_PURPLE + "Undo successful.");

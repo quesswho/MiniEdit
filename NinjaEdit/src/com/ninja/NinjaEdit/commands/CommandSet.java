@@ -27,7 +27,7 @@ public class CommandSet implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(sender instanceof Player) {
 			Player p = (Player) sender;
-			if(p.hasPermission("MiniEdit.set")) {
+			if(p.hasPermission("NinjaEdit.set")) {
 				if(args.length != 0) {
 					String name = p.getName();
 					PlayerSession session = inst.getSession(name);
@@ -43,7 +43,8 @@ public class CommandSet implements CommandExecutor {
 					}
 					if(inst.getSession(name).pos1 != null && inst.getSession(name).pos1 != null) {
 						
-						int count = editHistory.setBlocks(p.getWorld(), session.getRegion(), blocktype);
+						int count;
+						count = editHistory.setBlocks(p.getWorld(), session.getRegion(), blocktype);
 						
 						session.remember(editHistory);
 						p.sendMessage(ChatColor.LIGHT_PURPLE + "Operation completed ("  + count + " blocks affected).");

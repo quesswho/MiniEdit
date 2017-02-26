@@ -75,6 +75,9 @@ public class Vec3 {
 		this.z *= otherz;
 	}
 	
+	public Vec3 clampY(int min, int max) {
+        return new Vec3(x, Math.max(min, Math.min(max, y)), z);
+    }
 	
 	public Vec3 tempAdd(int x, int y, int z) {
         return new Vec3(this.x + x, this.y + y, this.z + z);

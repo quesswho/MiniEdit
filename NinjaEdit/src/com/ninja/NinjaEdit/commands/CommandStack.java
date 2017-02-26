@@ -23,7 +23,7 @@ public class CommandStack implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(sender instanceof Player) {
 			Player p = (Player) sender;
-			if(p.hasPermission("MiniEdit.stack")) {
+			if(p.hasPermission("NinjaEdit.stack")) {
 				Vec3 dir = new Vec3();
 				// no dir set. will use where ever the player is looking
 				if(args.length == 1) {

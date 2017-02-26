@@ -26,7 +26,7 @@ public class CommandCut implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(sender instanceof Player) {
 			Player p = (Player) sender;
-			if(p.hasPermission("MiniEdit.cut")) {
+			if(p.hasPermission("NinjaEdit.cut")) {
 				PlayerSession session = inst.getSession(p.getName());
 				EditHistory editHistory = new EditHistory();
 				Region region = session.getRegion();

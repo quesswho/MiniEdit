@@ -4,9 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -21,11 +19,12 @@ public class PlayerSession {
 	public static final int MAX_HISTORY_SIZE = 15;
 	
 	public Location pos1, pos2;
-	
+	private Region region;
 	private List<EditHistory> history = new LinkedList<EditHistory>();
     private int historyPointer = 0;
     private CuboidClipboard clipboard;
     
+    NinjaEdit inst;
     
     public void remember(EditHistory editHistory) {
         // Don't store anything if no changes were made
@@ -63,20 +62,18 @@ public class PlayerSession {
         return false;
     }
     
-    public void setPos1(String name, Location loc) {
-		if(Bukkit.getPlayer(name) != null) {
-			pos1 = loc;
-		} else {
-			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Error: " + "Tried to set pos1 to player: " + name + " But the player wasn't online.");
+	public void setPos1(Location loc) {
+		pos1 = loc;
+		if(pos1 != null && pos2 != null) {
+			region = new CuboidRegion(new Vec3(pos1.getBlockX(), pos1.getBlockY(), pos1.getBlockZ()), new Vec3(pos2.getBlockX(), pos2.getBlockY(), pos2.getBlockZ()));
 		}
 	}
 	
 	
-	public void setPos2(String name, Location loc) {
-		if(Bukkit.getPlayer(name) != null) {
-			pos2 = loc;
-		} else {
-			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Error: " + "Tried to set pos2 to player: " + name + " But the player wasn't online.");
+	public void setPos2(Location loc) {
+		pos2 = loc;
+		if(pos1 != null && pos2 != null) {
+			region = new CuboidRegion(new Vec3(pos1.getBlockX(), pos1.getBlockY(), pos1.getBlockZ()), new Vec3(pos2.getBlockX(), pos2.getBlockY(), pos2.getBlockZ()));
 		}
 	}
 	
@@ -101,47 +98,30 @@ public class PlayerSession {
 		}
 	}
 	
+	public void learnRegionChanges(World world) {
+		if (region instanceof CuboidRegion) {
+            CuboidRegion cuboidRegion = (CuboidRegion)region;
+            pos1 = new Location(world, cuboidRegion.getPos1().getBlockY(), cuboidRegion.getPos1().getBlockZ(), cuboidRegion.getPos1().getBlockX());
+            pos2 = new Location(world, cuboidRegion.getPos2().getBlockY(), cuboidRegion.getPos2().getBlockZ(), cuboidRegion.getPos2().getBlockX());
+        }
+	}
+	
 	public Region getRegion() {
-		if(!(pos1.equals(null) || pos2.equals(null))) {
-			return new CuboidRegion(new Vec3(pos1.getBlockX(), pos1.getBlockY(), pos1.getBlockZ()), new Vec3(pos2.getBlockX(), pos2.getBlockY(), pos2.getBlockZ()));
-		}
-		return null;
-	}
-	
-	public CuboidClipboard getClipboard() {
-        return clipboard;
+        return region;
     }
 	
-	public void setClipboard(CuboidClipboard clipboard) {
-        this.clipboard = clipboard;
-    }
+	 public CuboidClipboard getClipboard() {
+		 return clipboard;
+	 }
 	
-	@SuppressWarnings("deprecation")
-	public DataBlock getBlock(String id, boolean allAllowed) {
-        int foundID;
-        try {
-            foundID = Integer.parseInt(id);
-        } catch (NumberFormatException e) {
-            try {
-                foundID = Material.getMaterial(id).getId();
-            } catch (NumberFormatException e2) {
-            	return null;
-            }
-        }
-        return new DataBlock(foundID);
-        
-    }
-	
-	public DataBlock getBlockType(String id) {
-		return getBlock(id, false);
-	}
-	
-	public Vec3 getPlacementPosition(Player p) {
-        if (pos1.equals(null)) {
-            return new Vec3(p.getLocation().getBlockX(), p.getLocation().getBlockY(), p.getLocation().getBlockZ());
-        }
-
-
-        return new Vec3(pos1.getBlockX(), pos1.getBlockY(), pos1.getBlockZ());
-    }
+	 public void setClipboard(CuboidClipboard clipboard) {
+		 this.clipboard = clipboard;
+	 }
+	 
+	 public Vec3 getPlacementPosition(Player p) {
+		 if (pos1.equals(null)) {
+			 return new Vec3(p.getLocation().getBlockX(), p.getLocation().getBlockY(), p.getLocation().getBlockZ());
+		 }
+		 return new Vec3(pos1.getBlockX(), pos1.getBlockY(), pos1.getBlockZ());
+	 }
 }

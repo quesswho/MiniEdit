@@ -14,7 +14,7 @@ public class CommandWand implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(sender instanceof Player) {
 			Player p = (Player) sender;
-			if(p.hasPermission("MiniEdit.up")) {
+			if(p.hasPermission("NinjaEdit.wand")) {
 				 if(p.getInventory().firstEmpty() != -1) {
 					 p.getInventory().addItem(new ItemStack(Material.WOOD_AXE, 1));
 					 p.sendMessage(ChatColor.LIGHT_PURPLE + "Wand given.");

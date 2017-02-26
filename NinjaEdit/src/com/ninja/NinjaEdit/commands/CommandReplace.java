@@ -27,7 +27,7 @@ public class CommandReplace implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(sender instanceof Player) {
 			Player p = (Player) sender;
-			if(p.hasPermission("MiniEdit.replace")) {
+			if(p.hasPermission("NinjaEdit.replace")) {
 					String name = p.getName();
 					PlayerSession session = inst.getSession(name);
 					EditHistory editHistory = new EditHistory();

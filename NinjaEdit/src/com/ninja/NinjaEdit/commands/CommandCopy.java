@@ -25,7 +25,7 @@ public class CommandCopy implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(sender instanceof Player) {
 			Player p = (Player) sender;
-			if(p.hasPermission("MiniEdit.copy")) {
+			if(p.hasPermission("NinjaEdit.copy")) {
 				PlayerSession session = inst.getSession(p.getName());
 				EditHistory editHistory = new EditHistory();
 				Region region = session.getRegion();

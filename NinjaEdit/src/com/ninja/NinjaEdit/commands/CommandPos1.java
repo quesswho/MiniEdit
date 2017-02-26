@@ -21,9 +21,9 @@ public class CommandPos1 implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(sender instanceof Player) {
 			Player p = (Player) sender;
-			if(p.hasPermission("MiniEdit.Pos1")) {
+			if(p.hasPermission("NinjaEdit.Pos1")) {
 				Location pos1 = p.getLocation();
-				inst.getSession(p.getName()).setPos1(p.getName(), pos1);
+				inst.getSession(p.getName()).setPos1(pos1);
 				p.sendMessage(ChatColor.LIGHT_PURPLE + "First position set to (" + pos1.getBlockX() + ", " + pos1.getBlockY() + ", " + pos1.getBlockZ() + ") (" + inst.getSession(p.getName()).getSelectionSize(p.getName()) + ")");
 				return true;
 			} else {

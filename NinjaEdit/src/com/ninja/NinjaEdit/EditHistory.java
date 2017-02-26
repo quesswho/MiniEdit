@@ -2,9 +2,9 @@ package com.ninja.NinjaEdit;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 
 import com.ninja.NinjaEdit.maths.Vec3;
@@ -82,6 +82,10 @@ public class EditHistory {
 	public DataBlock getBlock(World world, Vec3 vec) {
 		int type = world.getBlockAt(vec.getBlockX(), vec.getBlockY(), vec.getBlockZ()).getTypeId();
 		int data = world.getBlockAt(vec.getBlockX(), vec.getBlockY(), vec.getBlockZ()).getData();
+		//don't store piston heads
+		if(type == 34) {
+			return new DataBlock(0);
+		}
 		return new DataBlock(type, data);
 	}
 	
@@ -188,6 +192,34 @@ public class EditHistory {
 	        
 	 	 }
 	 	 return affected;
+	 }
+	 
+	 public String getIds(World world, Region region, int maxcount) {
+		 String ids = "";
+		 
+		 if(region.getSize() > maxcount) {
+			 return ids;
+		 }
+		 
+		 Vec3 min = region.getMinimumPoint();
+         Vec3 max = region.getMaximumPoint();
+	        
+         int minX = min.getBlockX();
+         int minY = min.getBlockY();
+         int minZ = min.getBlockZ();
+         int maxX = max.getBlockX();
+         int maxY = max.getBlockY();
+	     int maxZ = max.getBlockZ();
+	        
+		 for (int x = minX; x <= maxX; x++) {
+	          for (int z = minZ; z <= maxZ; z++) {
+                  for (int y = minY; y <= maxY; y++) {
+                      DataBlock block = getBlock(world, new Vec3(x, y, z));
+                      ids += (ChatColor.LIGHT_PURPLE + "" + block.getTypeId() + ":" + block.getDataValue() + ", ");
+                  }
+	          }
+		 }
+		 return ids;
 	 }
 	 
 	 public int stackClipboard(World world, Region region, Vec3 dir, int count) {

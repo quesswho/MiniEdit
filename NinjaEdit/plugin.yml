@@ -41,3 +41,12 @@ commands:
    /move:
       description: move your clipboard in a direction.
       usage: //move <dir> <amount>
+   /getid:
+      description: get id of blocks.
+      usage: //getid
+   /expand:
+      description: expand the region.
+      usage: //expand <dir | look> <amount>
+   /contract:
+      description: contract the region.
+      usage: //contract <dir | look> <amount>

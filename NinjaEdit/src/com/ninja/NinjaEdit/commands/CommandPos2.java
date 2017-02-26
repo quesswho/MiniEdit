@@ -21,9 +21,9 @@ public class CommandPos2 implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(sender instanceof Player) {
 			Player p = (Player) sender;
-			if(p.hasPermission("MiniEdit.Pos2")) {
+			if(p.hasPermission("NinjaEdit.Pos2")) {
 				Location pos2 = p.getLocation();
-				inst.getSession(p.getName()).setPos2(p.getName(), pos2);
+				inst.getSession(p.getName()).setPos2(pos2);
 				p.sendMessage(ChatColor.LIGHT_PURPLE + "Second position set to (" + pos2.getBlockX() + ", " + pos2.getBlockY() + ", " + pos2.getBlockZ() + ") (" + inst.getSession(p.getName()).getSelectionSize(p.getName()) + ")");
 				return true;
 			} else {

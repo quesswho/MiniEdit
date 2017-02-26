@@ -31,7 +31,7 @@ public class CuboidRegion implements Region {
 
     public int getSize() {
     	Vec3 min = getMinimumPoint();
-        Vec3 max = getMaximumPoint();
+    	Vec3 max = getMaximumPoint();
 
         return (int)((max.getBlockX() - min.getBlockX() + 1) *
                      (max.getBlockY() - min.getBlockY() + 1) *
@@ -40,7 +40,7 @@ public class CuboidRegion implements Region {
 
     public int getWidth() {
     	Vec3 min = getMinimumPoint();
-        Vec3 max = getMaximumPoint();
+    	Vec3 max = getMaximumPoint();
 
         return (int)(max.getBlockX() - min.getBlockX() + 1);
     }
@@ -52,10 +52,9 @@ public class CuboidRegion implements Region {
         return (int)(max.getBlockY() - min.getBlockY() + 1);
     }
 
-
     public int getLength() {
     	Vec3 min = getMinimumPoint();
-        Vec3 max = getMaximumPoint();
+    	Vec3 max = getMaximumPoint();
 
         return (int)(max.getBlockZ() - min.getBlockZ() + 1);
     }
@@ -63,6 +62,117 @@ public class CuboidRegion implements Region {
 
     public Iterator<Vec3> iterator() {
         throw new UnsupportedOperationException("Not implemented");
+    }
+    
+    public void setPos1(Vec3 pos1) {
+        this.pos1 = pos1;
+    }
+    
+    public Vec3 getPos1() {
+        return pos1;
+    }
+    
+    public void setPos2(Vec3 pos2) {
+        this.pos2 = pos2;
+    }
+    
+    public Vec3 getPos2() {
+        return pos2;
+    }
+    
+    
+    public void expand(Vec3 change) {
+        if (change.getBlockX() > 0) {
+            if (Math.max(pos1.getBlockX(), pos2.getBlockX()) == pos1.getBlockX()) {
+                pos1 = pos1.tempAdd(new Vec3(change.getBlockX(), 0, 0));
+            } else {
+                pos2 = pos2.tempAdd(new Vec3(change.getBlockX(), 0, 0));
+            }
+        } else {
+            if (Math.min(pos1.getBlockX(), pos2.getBlockX()) == pos1.getBlockX()) {
+                pos1 = pos1.tempAdd(new Vec3(change.getBlockX(), 0, 0));
+            } else {
+                pos2 = pos2.tempAdd(new Vec3(change.getBlockX(), 0, 0));
+            }
+        }
+
+        if (change.getBlockY() > 0) {
+            if (Math.max(pos1.getBlockY(), pos2.getBlockY()) == pos1.getBlockY()) {
+                pos1 = pos1.tempAdd(new Vec3(0, change.getBlockY(), 0));
+            } else {
+                pos2 = pos2.tempAdd(new Vec3(0, change.getBlockY(), 0));
+            }
+        } else {
+            if (Math.min(pos1.getBlockY(), pos2.getBlockY()) == pos1.getBlockY()) {
+                pos1 = pos1.tempAdd(new Vec3(0, change.getBlockY(), 0));
+            } else {
+                pos2 = pos2.tempAdd(new Vec3(0, change.getBlockY(), 0));
+            }
+        }
+
+        if (change.getBlockZ() > 0) {
+            if (Math.max(pos1.getBlockZ(), pos2.getBlockZ()) == pos1.getBlockZ()) {
+                pos1 = pos1.tempAdd(new Vec3(0, 0, change.getBlockZ()));
+            } else {
+                pos2 = pos2.tempAdd(new Vec3(0, 0, change.getBlockZ()));
+            }
+        } else {
+            if (Math.min(pos1.getBlockZ(), pos2.getBlockZ()) == pos1.getBlockZ()) {
+                pos1 = pos1.tempAdd(new Vec3(0, 0, change.getBlockZ()));
+            } else {
+                pos2 = pos2.tempAdd(new Vec3(0, 0, change.getBlockZ()));
+            }
+        }
+
+        pos1 = pos1.clampY(0, 127);
+        pos2 = pos2.clampY(0, 127);
+    }
+
+    public void contract(Vec3 change) {
+        if (change.getBlockX() < 0) {
+            if (Math.max(pos1.getBlockX(), pos2.getBlockX()) == pos1.getBlockX()) {
+                pos1 = pos1.tempAdd(new Vec3(change.getBlockX(), 0, 0));
+            } else {
+                pos2 = pos2.tempAdd(new Vec3(change.getBlockX(), 0, 0));
+            }
+        } else {
+            if (Math.min(pos1.getBlockX(), pos2.getBlockX()) == pos1.getBlockX()) {
+                pos1 = pos1.tempAdd(new Vec3(change.getBlockX(), 0, 0));
+            } else {
+                pos2 = pos2.tempAdd(new Vec3(change.getBlockX(), 0, 0));
+            }
+        }
+
+        if (change.getBlockY() < 0) {
+            if (Math.max(pos1.getBlockY(), pos2.getBlockY()) == pos1.getBlockY()) {
+                pos1 = pos1.tempAdd(new Vec3(0, change.getBlockY(), 0));
+            } else {
+                pos2 = pos2.tempAdd(new Vec3(0, change.getBlockY(), 0));
+            }
+        } else {
+            if (Math.min(pos1.getBlockY(), pos2.getBlockY()) == pos1.getBlockY()) {
+                pos1 = pos1.tempAdd(new Vec3(0, change.getBlockY(), 0));
+            } else {
+                pos2 = pos2.tempAdd(new Vec3(0, change.getBlockY(), 0));
+            }
+        }
+
+        if (change.getBlockZ() < 0) {
+            if (Math.max(pos1.getBlockZ(), pos2.getBlockZ()) == pos1.getBlockZ()) {
+                pos1 = pos1.tempAdd(new Vec3(0, 0, change.getBlockZ()));
+            } else {
+                pos2 = pos2.tempAdd(new Vec3(0, 0, change.getBlockZ()));
+            }
+        } else {
+            if (Math.min(pos1.getBlockZ(), pos2.getBlockZ()) == pos1.getBlockZ()) {
+                pos1 = pos1.tempAdd(new Vec3(0, 0, change.getBlockZ()));
+            } else {
+                pos2 = pos2.tempAdd(new Vec3(0, 0, change.getBlockZ()));
+            }
+        }
+
+        pos1 = pos1.clampY(0, 127);
+        pos2 = pos2.clampY(0, 127);
     }
 
 }
