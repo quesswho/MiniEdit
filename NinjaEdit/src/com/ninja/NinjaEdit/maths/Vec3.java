@@ -4,11 +4,11 @@ public class Vec3 {
 	
 	private int x,y,z;
 	
-	//public Vec3(double x, double y, double z) {
-	//	this.x = x;
-	//	this.y = y;
-	//	this.z = z;
-	//}
+	public Vec3(Vec3 vec) {
+		this.x = vec.x;
+		this.y = vec.y;
+		this.z = vec.z;
+	}
 	
 	public Vec3(int x, int y, int z) {
 		this.x = x;

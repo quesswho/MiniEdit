@@ -6,10 +6,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.ninja.NinjaEdit.DataBlock;
 import com.ninja.NinjaEdit.EditHistory;
 import com.ninja.NinjaEdit.NinjaEdit;
 import com.ninja.NinjaEdit.PlayerSession;
+import com.ninja.NinjaEdit.blocks.DataBlock;
 import com.ninja.NinjaEdit.maths.Vec3;
 import com.ninja.NinjaEdit.regions.CuboidClipboard;
 import com.ninja.NinjaEdit.regions.Region;

@@ -25,7 +25,7 @@ public class NinjaEditListener implements Listener {
     public void onInteract(PlayerInteractEvent e) {
 		Player p = (Player) e.getPlayer();
 		if (e.getHand() != null && e.getHand() != EquipmentSlot.OFF_HAND) {
-			if(e.getItem().getType() == Material.WOOD_AXE) {
+			if(e.getPlayer().getInventory().getItemInMainHand().getType() == Material.WOOD_AXE) {
 				if(e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR)  {
 					if(p.hasPermission("NinjaEdit.Pos2")) {
 						Location loc = e.getPlayer().getTargetBlock((HashSet<Byte>)null, 100).getLocation();

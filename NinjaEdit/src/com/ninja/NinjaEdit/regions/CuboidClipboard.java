@@ -2,8 +2,8 @@ package com.ninja.NinjaEdit.regions;
 
 import org.bukkit.World;
 
-import com.ninja.NinjaEdit.DataBlock;
 import com.ninja.NinjaEdit.EditHistory;
+import com.ninja.NinjaEdit.blocks.DataBlock;
 import com.ninja.NinjaEdit.maths.Vec3;
 
 public class CuboidClipboard {

@@ -1,7 +1,8 @@
 # This is a TODO list of the plugin called NinjaEdit:
  
-1. Support for signs, chests, dispensers, hoppers and droppers 
-2. pattern support(multiple blocks when placing blocks) 
+
+1. Pattern support for //replace
+2. //cylinder
 3. //flip
 4. //rotate
 

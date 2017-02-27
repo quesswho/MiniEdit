@@ -1,6 +1,6 @@
 name: NinjaEdit
 main: com.ninja.NinjaEdit.NinjaEdit
-version: 1.0.3
+version: 1.0.4
 commands:
    /pos1:
       description: Set's a NinjaEdit pos
@@ -24,29 +24,29 @@ commands:
       description: Go up.
       usage: //up <value> 
    /copy:
-      description: copy your selection to your clipboard.
+      description: Copy your selection to your clipboard.
       usage: //copy
    /paste:
-      description: paste your clipboard.
+      description: Paste your clipboard.
       usage: //paste
    /cut:
-      description: cut the selection to your clipboard.
+      description: Cut the selection to your clipboard.
       usage: //cut
    /stack:
-      description: stack your selection in a direction.
-      usage: //stack <dir> <amount>
+      description: Stack your selection in a direction.
+      usage: //stack <amount> <dir>
    /wand:
       description: Gives you a magical wand.
       usage: //wand
    /move:
-      description: move your clipboard in a direction.
-      usage: //move <dir> <amount>
+      description: Move your clipboard in a direction.
+      usage: //move <amount> <dir>
    /getid:
-      description: get id of blocks.
+      description: Get id of blocks.
       usage: //getid
    /expand:
-      description: expand the region.
-      usage: //expand <dir | look> <amount>
+      description: Expand the region.
+      usage: //expand <amount> <dir | look>
    /contract:
-      description: contract the region.
-      usage: //contract <dir | look> <amount>
+      description: Contract the region.
+      usage: //contract <amount> <dir | look>

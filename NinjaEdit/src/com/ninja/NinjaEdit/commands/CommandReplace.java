@@ -6,11 +6,11 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.ninja.NinjaEdit.DataBlock;
 import com.ninja.NinjaEdit.EditHistory;
 import com.ninja.NinjaEdit.NinjaEdit;
 import com.ninja.NinjaEdit.PlayerSession;
 import com.ninja.NinjaEdit.Exceptions.UnknownItemException;
+import com.ninja.NinjaEdit.blocks.DataBlock;
 
 public class CommandReplace implements CommandExecutor {
 

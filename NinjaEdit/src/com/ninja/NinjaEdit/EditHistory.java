@@ -5,15 +5,31 @@ import java.util.HashSet;
 import java.util.Map;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Chest;
+import org.bukkit.block.CreatureSpawner;
+import org.bukkit.block.Dispenser;
+import org.bukkit.block.Dropper;
+import org.bukkit.block.Furnace;
+import org.bukkit.block.Sign;
+import org.bukkit.inventory.ItemStack;
 
+import com.ninja.NinjaEdit.blocks.ChestBlock;
+import com.ninja.NinjaEdit.blocks.DataBlock;
+import com.ninja.NinjaEdit.blocks.DispenserBlock;
+import com.ninja.NinjaEdit.blocks.FurnaceBlock;
+import com.ninja.NinjaEdit.blocks.MobSpawnerBlock;
+import com.ninja.NinjaEdit.blocks.NoteBlock;
+import com.ninja.NinjaEdit.blocks.SignBlock;
+import com.ninja.NinjaEdit.blocks.pattern.Pattern;
 import com.ninja.NinjaEdit.maths.Vec3;
 import com.ninja.NinjaEdit.regions.CuboidRegion;
 import com.ninja.NinjaEdit.regions.Region;
 
 
 public class EditHistory {
-
+	
 	//Stores The changes made
 	private Map<Vec3, DataBlock> before = new HashMap<Vec3,DataBlock>();
 	private Map<Vec3, DataBlock> after = new HashMap<Vec3, DataBlock>();
@@ -33,6 +49,8 @@ public class EditHistory {
 		aSyncBlockslist.add(55); //redstone wire
 		aSyncBlockslist.add(149); //comparator off
 		aSyncBlockslist.add(150); //comparator on
+		aSyncBlockslist.add(63); //standing sign
+		aSyncBlockslist.add(68); //flying sign
 		
 		/*aSyncBlockslist.add(new DataBlock(50)); //torch
 		aSyncBlockslist.add(new DataBlock(75)); //redstonetorch off
@@ -85,7 +103,29 @@ public class EditHistory {
 		//don't store piston heads
 		if(type == 34) {
 			return new DataBlock(0);
+		} else if(type == 63 || type == 68) { //sign
+			String[] text = ((Sign)world.getBlockAt(vec.getBlockX(), vec.getBlockY(), vec.getBlockZ()).getState()).getLines();
+			return new SignBlock(type, data, text);
+		} else if(type == 54) { //chest
+			ItemStack[] items = ((Chest)world.getBlockAt(vec.getBlockX(), vec.getBlockY(), vec.getBlockZ()).getState()).getInventory().getContents();
+			return new ChestBlock(data, items);
+		} else if(type == 61 || type == 62) { //furnace
+			ItemStack[] items = ((Furnace)world.getBlockAt(vec.getBlockX(), vec.getBlockY(), vec.getBlockZ()).getState()).getInventory().getContents();
+			return new FurnaceBlock(type, data, items);
+		} else if(type == 23) { //dispenser
+			ItemStack[] items = ((Dispenser)world.getBlockAt(vec.getBlockX(), vec.getBlockY(), vec.getBlockZ()).getState()).getInventory().getContents();
+			return new DispenserBlock(type, data, items);
+		} else if(type == 158) { //dropper
+			ItemStack[] items = ((Dropper)world.getBlockAt(vec.getBlockX(), vec.getBlockY(), vec.getBlockZ()).getState()).getInventory().getContents();
+			return new DispenserBlock(type, data, items);
+		} else if(type == 25) { //noteblock
+			Byte note = ((org.bukkit.block.NoteBlock)world.getBlockAt(vec.getBlockX(), vec.getBlockY(), vec.getBlockZ()).getState()).getRawNote();
+			return new NoteBlock(data, note);
+		} else if(type == 52) { //spawner
+			String mobtype = ((CreatureSpawner)world.getBlockAt(vec.getBlockX(), vec.getBlockY(), vec.getBlockZ()).getState()).getCreatureTypeName();
+			return new MobSpawnerBlock(data, mobtype);
 		}
+		
 		return new DataBlock(type, data);
 	}
 	
@@ -105,6 +145,74 @@ public class EditHistory {
 	@SuppressWarnings("deprecation")
 	public void setBlock(World world, Vec3 vec, DataBlock block) {
 		world.getBlockAt((int)vec.getBlockX(), (int)vec.getBlockY(), (int)vec.getBlockZ()).setTypeIdAndData(block.getTypeId(), (byte) block.getDataValue(), false);
+		if(block instanceof SignBlock) {
+			SignBlock signBlock = (SignBlock)block;
+			String[] text = signBlock.getText();
+			Sign sign = (Sign) world.getBlockAt((int)vec.getBlockX(), (int)vec.getBlockY(), (int)vec.getBlockZ()).getState();
+			for(int i = 0; i < text.length; i++) {
+				sign.setLine(i, text[i]);
+			}
+			sign.update();
+		} else if (block instanceof ChestBlock) {
+            ChestBlock chestBlock = (ChestBlock)block;
+            ItemStack blankItem = new ItemStack(0);
+            ItemStack[] items = chestBlock.getItems();
+            Chest chest = (Chest) world.getBlockAt((int)vec.getBlockX(), (int)vec.getBlockY(), (int)vec.getBlockZ()).getState();
+            for (byte i = 0; i <= 26; i++) {
+                ItemStack item = items[i];
+                if (item != null) {
+                	chest.getInventory().setItem(i, new ItemStack(Material.getMaterial((int)item.getTypeId()), item.getAmount()));
+                } else {
+                	chest.getInventory().setItem(i, blankItem);
+                }
+            }
+            chest.update();
+        } else if (block instanceof FurnaceBlock) {
+        	 FurnaceBlock furnaceBlock = (FurnaceBlock)block;
+             ItemStack blankItem = new ItemStack(0);
+             ItemStack[] items = furnaceBlock.getItems();
+             Furnace furnace = (Furnace) world.getBlockAt((int)vec.getBlockX(), (int)vec.getBlockY(), (int)vec.getBlockZ()).getState();
+             for (byte i = 0; i <= 1; i++) {
+            	 ItemStack item = items[i];
+            	 if (item != null) {
+            		 furnace.getInventory().setItem(i, new ItemStack(Material.getMaterial((int)item.getTypeId()), item.getAmount()));
+                 } else {
+                	 furnace.getInventory().setItem(i, blankItem);
+                 }
+             }
+        } else if (block instanceof DispenserBlock) {
+	       	 DispenserBlock dispenserBlock = (DispenserBlock)block;
+	         ItemStack blankItem = new ItemStack(0);
+	         ItemStack[] items = dispenserBlock.getItems();
+	         if(block.getTypeId() == 23) {
+	        	 Dispenser dispenser = (Dispenser) world.getBlockAt((int)vec.getBlockX(), (int)vec.getBlockY(), (int)vec.getBlockZ()).getState();
+	        	 for (byte i = 0; i <= 8; i++) {
+	 	        	 ItemStack item = items[i];
+	 	        	 if (item != null) {
+	 	        		 dispenser.getInventory().setItem(i, new ItemStack(Material.getMaterial((int)item.getTypeId()), item.getAmount()));
+	 	             } else {
+	 	            	 dispenser.getInventory().setItem(i, blankItem);
+	 	             }
+	 	         }
+	         } else {
+	        	 Dropper dropper = (Dropper) world.getBlockAt((int)vec.getBlockX(), (int)vec.getBlockY(), (int)vec.getBlockZ()).getState();
+	        	 for (byte i = 0; i <= 8; i++) {
+	 	        	 ItemStack item = items[i];
+	 	        	 if (item != null) {
+	 	        		 dropper.getInventory().setItem(i, new ItemStack(Material.getMaterial((int)item.getTypeId()), item.getAmount()));
+	 	             } else {
+	 	            	 dropper.getInventory().setItem(i, blankItem);
+	 	             }
+	 	         }
+	         }
+	       
+	    } else if (block instanceof NoteBlock) {
+	        byte note =  ((NoteBlock) block).getNote();
+	        ((org.bukkit.block.NoteBlock) world.getBlockAt((int)vec.getBlockX(), (int)vec.getBlockY(), (int)vec.getBlockZ()).getState()).setRawNote(note);
+	    } else if (block instanceof MobSpawnerBlock) {
+	        String mobtype =  ((CreatureSpawner) world.getBlockAt((int)vec.getBlockX(), (int)vec.getBlockY(), (int)vec.getBlockZ()).getState()).getCreatureTypeName();
+	        ((CreatureSpawner) world.getBlockAt((int)vec.getBlockX(), (int)vec.getBlockY(), (int)vec.getBlockZ()).getState()).setCreatureTypeByName(mobtype);
+	    }
 	}
 	
 	//History change
@@ -130,7 +238,7 @@ public class EditHistory {
 		setBlock(world, vec, block);
 	}
 	
-	 public int setBlocks(World world, Region region, DataBlock blocktype) {
+ 	public int setBlocks(World world, Region region, DataBlock blocktype) {
 	 	 
          int affected = 0;
      
@@ -149,20 +257,63 @@ public class EditHistory {
              for (int x = minX; x <= maxX; x++) {
                  for (int y = minY; y <= maxY; y++) {
                      for (int z = minZ; z <= maxZ; z++) {
-                         Vec3 pt = new Vec3(x, y, z);
-                         hSetBlock(world, pt, blocktype);
+                         Vec3 pos = new Vec3(x, y, z);
+                         hSetBlock(world, pos, blocktype);
                          affected++;
                      }
                  }
              }
-         } 
+         } else {
+        	 for (Vec3 pos : region) {
+                 hSetBlock(world, pos, blocktype);
+                 affected++;
+                 
+             }
+         }
         
-        return affected;
-	 }
+         return affected;
+ 	}
+ 	
+ 	public int setBlocks(World world, Region region, Pattern pattern) {
+	 	 
+        int affected = 0;
+    
+        if (region instanceof CuboidRegion) {
+            Vec3 min = region.getMinimumPoint();
+            Vec3 max = region.getMaximumPoint();
+        
+            int minX = min.getBlockX();
+            int minY = min.getBlockY();
+            int minZ = min.getBlockZ();
+            int maxX = max.getBlockX();
+            int maxY = max.getBlockY();
+            int maxZ = max.getBlockZ();
 
+            
+            for (int x = minX; x <= maxX; x++) {
+                for (int y = minY; y <= maxY; y++) {
+                    for (int z = minZ; z <= maxZ; z++) {
+                        Vec3 pos = new Vec3(x, y, z);
+                        hSetBlock(world, pos, pattern.next(pos));
+                        affected++;
+                    }
+                }
+            }
+        } else {
+       	 for (Vec3 pos : region) {
+                hSetBlock(world, pos, pattern.next(pos));
+                affected++;
+                
+            }
+        }
+       
+        return affected;
+	}
+
+ 	
 	
 	 
-	 public int replaceBlocks(World world, Region region, int fromBlockType, DataBlock toBlock) {
+ 	public int replaceBlocks(World world, Region region, int fromBlockType, DataBlock toBlock) {
 	 	 
 	 	 int affected = 0;
 	 	 if (region instanceof CuboidRegion) {
@@ -180,10 +331,10 @@ public class EditHistory {
 	            for (int x = minX; x <= maxX; x++) {
 	                for (int y = minY; y <= maxY; y++) {
 	                    for (int z = minZ; z <= maxZ; z++) {
-	                        Vec3 vec = new Vec3(x, y, z);
-	                        int curBlockType = getBlock(world, vec).getTypeId();
+	                        Vec3 pos = new Vec3(x, y, z);
+	                        int curBlockType = getBlock(world, pos).getTypeId();
 	                        if (fromBlockType == -1 && curBlockType != 0 || curBlockType == fromBlockType) {
-	                            hSetBlock(world, vec, toBlock);
+	                            hSetBlock(world, pos, toBlock);
 	                            affected++;
 	                        }
 	                    }
@@ -192,75 +343,81 @@ public class EditHistory {
 	        
 	 	 }
 	 	 return affected;
-	 }
-	 
-	 public String getIds(World world, Region region, int maxcount) {
-		 String ids = "";
+	}
+ 	
+	
+	public String getIds(World world, Region region, int maxcount) {
+		
+		
+		String ids = "";
 		 
-		 if(region.getSize() > maxcount) {
-			 return ids;
-		 }
+		if(region.getSize() > maxcount) {
+			
+			return ids;
+		}
 		 
-		 Vec3 min = region.getMinimumPoint();
-         Vec3 max = region.getMaximumPoint();
+		Vec3 min = region.getMinimumPoint();
+	    Vec3 max = region.getMaximumPoint();
 	        
-         int minX = min.getBlockX();
-         int minY = min.getBlockY();
-         int minZ = min.getBlockZ();
-         int maxX = max.getBlockX();
-         int maxY = max.getBlockY();
-	     int maxZ = max.getBlockZ();
+	    int minX = min.getBlockX();
+	    int minY = min.getBlockY();
+	    int minZ = min.getBlockZ();
+	    int maxX = max.getBlockX();
+	    int maxY = max.getBlockY();
+	    int maxZ = max.getBlockZ();
 	        
-		 for (int x = minX; x <= maxX; x++) {
-	          for (int z = minZ; z <= maxZ; z++) {
-                  for (int y = minY; y <= maxY; y++) {
-                      DataBlock block = getBlock(world, new Vec3(x, y, z));
-                      ids += (ChatColor.LIGHT_PURPLE + "" + block.getTypeId() + ":" + block.getDataValue() + ", ");
-                  }
-	          }
-		 }
-		 return ids;
-	 }
+		for (int x = minX; x <= maxX; x++) {
+			for (int z = minZ; z <= maxZ; z++) {
+				for (int y = minY; y <= maxY; y++) {
+					DataBlock block = getBlock(world, new Vec3(x, y, z));
+					ids += (ChatColor.LIGHT_PURPLE + "" + block.getTypeId() + ":" + block.getDataValue() + ", ");
+				}
+			}
+          
+		}
+		return ids;
+	}
+	
 	 
-	 public int stackClipboard(World world, Region region, Vec3 dir, int count) {
-	        int affected = 0;
+	public int stackClipboard(World world, Region region, Vec3 dir, int count) {
+        int affected = 0;
 
-	        Vec3 min = region.getMinimumPoint();
-	        Vec3 max = region.getMaximumPoint();
-	        
-	        int minX = min.getBlockX();
-	        int minY = min.getBlockY();
-	        int minZ = min.getBlockZ();
-	        int maxX = max.getBlockX();
-	        int maxY = max.getBlockY();
-	        int maxZ = max.getBlockZ();
-	        
-	        int xs = region.getWidth();
-	        int ys = region.getHeight();
-	        int zs = region.getLength();
-	        for (int x = minX; x <= maxX; x++) {
-	            for (int z = minZ; z <= maxZ; z++) {
-	                for (int y = minY; y <= maxY; y++) {
-	                    DataBlock block = getBlock(world, new Vec3(x, y, z));
+        Vec3 min = region.getMinimumPoint();
+        Vec3 max = region.getMaximumPoint();
+        
+        int minX = min.getBlockX();
+        int minY = min.getBlockY();
+        int minZ = min.getBlockZ();
+        int maxX = max.getBlockX();
+        int maxY = max.getBlockY();
+        int maxZ = max.getBlockZ();
+        
+        int xs = region.getWidth();
+        int ys = region.getHeight();
+        int zs = region.getLength();
+        for (int x = minX; x <= maxX; x++) {
+            for (int z = minZ; z <= maxZ; z++) {
+                for (int y = minY; y <= maxY; y++) {
+                    DataBlock block = getBlock(world, new Vec3(x, y, z));
 
-	                    if (!block.isAir()) {
-	                        for (int i = 1; i <= count; i++) {
-	                            Vec3 pos = new Vec3( x + xs * dir.getBlockX() * i, y + ys * dir.getBlockY() * i, z + zs * dir.getBlockZ() * i);
-	                            hSetBlock(world, pos, block);
-	                            affected++;
-	                            
-	                        }
-	                    }
-	                }
-	            }
-	        }
+                    if (!block.isAir()) {
+                        for (int i = 1; i <= count; i++) {
+                            Vec3 pos = new Vec3( x + xs * dir.getBlockX() * i, y + ys * dir.getBlockY() * i, z + zs * dir.getBlockZ() * i);
+                            hSetBlock(world, pos, block);
+                            affected++; 
+                        }
+                    }
+                }
+            }
+        }
 
-	        return affected;
-	    }
+        return affected;
+    }
+	
 	 
 	 public int moveClipboard(World world, Region region, Vec3 dir, int amount) {
 		 int affected = 0;
-
+		 
 		 DataBlock setblock = new DataBlock(0);
 		 
 		 Vec3 min = region.getMinimumPoint();
@@ -287,7 +444,7 @@ public class EditHistory {
                 		 hSetBlock(world, pos, setblock);
                 	 }
                  }
-             }
+	         }
          }
 	     for(Map.Entry<Vec3, DataBlock> movedBlock : delayed.entrySet()) {
 	    	 hSetBlock(world, movedBlock.getKey(), movedBlock.getValue());
@@ -331,7 +488,7 @@ public class EditHistory {
     }
 	
 	public void finshAsyncBlocks(World world) {
-        if (!aSync) { return; }
+		if (!aSync) { return; }
         
         for (Map.Entry<Vec3,DataBlock> entry : aSyncBlocks.entrySet()) {
             Vec3 vec = entry.getKey();

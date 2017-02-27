@@ -38,10 +38,11 @@ public class CommandExpand implements CommandExecutor {
 					if(pitch > 60) dir.add(0, -1, 0); // down
 					else if(pitch < -60) dir.add(0, 1, 0); // up
 					
-					else if(yaw < 45 && yaw > 315) dir.add(0, 0, 1); //south
-					else if(yaw > 45 && yaw < 135) dir.add(-1, 0, 0); //West
-					else if((yaw > 135) || (yaw < 225)) dir.add(0, 0, -1); //north
-					else if((yaw > 225 && yaw < 315)) dir.add(1, 0, 0); //East
+					else if (0 <= yaw && yaw < 45) dir.add(0, 0, 1); //south
+			        else if (45 <= yaw && yaw < 135) dir.add(-1, 0, 0); //west
+			        else if (135 <= yaw && yaw < 225) dir.add(0, 0, -1); //north
+			        else if (225 <= yaw && yaw < 315) dir.add(1, 0, 0); //west
+			        else if ((315 <= yaw && yaw < 360.0) || 45 > yaw) dir.add(0, 0, 1); //south
 					 
 				} else if(args.length == 2) {
 					String dirstr = args[1];
