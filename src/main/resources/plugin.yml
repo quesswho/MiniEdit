@@ -1,6 +1,9 @@
-name: NinjaEdit
-main: com.ninja.NinjaEdit.NinjaEdit
-version: 1.0.4
+name: ${artifactId}
+main: ${groupId}.${artifactId}
+version: ${version}
+
+author: ninja2003
+
 commands:
    /pos1:
       description: Set's a NinjaEdit pos
